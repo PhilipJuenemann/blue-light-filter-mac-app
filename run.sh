@@ -13,18 +13,24 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BINARY="$SCRIPT_DIR/BlueLightFilter"
+APP_BUNDLE="$SCRIPT_DIR/BlueLightFilter.app"
+BINARY="$APP_BUNDLE/Contents/MacOS/BlueLightFilter"
 
 echo "🔅 Blue Light Filter"
 echo "===================="
 echo ""
 
-# Compile if needed
-if [ ! -f "$BINARY" ] || [ "$SCRIPT_DIR/BlueLightFilter.swift" -nt "$BINARY" ]; then
+# Compile if needed (check source, Info.plist, or missing binary)
+if [ ! -f "$BINARY" ] \
+   || [ "$SCRIPT_DIR/BlueLightFilter.swift" -nt "$BINARY" ] \
+   || [ "$SCRIPT_DIR/Info.plist" -nt "$APP_BUNDLE/Contents/Info.plist" ]; then
     echo "Compiling..."
+    mkdir -p "$APP_BUNDLE/Contents/MacOS"
+    cp "$SCRIPT_DIR/Info.plist" "$APP_BUNDLE/Contents/Info.plist"
     swiftc -O \
         -framework Cocoa \
         -framework QuartzCore \
+        -framework CoreLocation \
         -o "$BINARY" \
         "$SCRIPT_DIR/BlueLightFilter.swift"
     echo "✓ Compiled successfully"
@@ -34,6 +40,7 @@ echo ""
 echo "Starting Blue Light Filter..."
 echo "  • Look for the 🔅 icon in your menu bar"
 echo "  • Use the menu to adjust intensity or switch methods"
+echo "  • Open Schedule Settings (⌘,) to configure auto schedule"
 echo "  • Press Ctrl+C here or use Quit from the menu to stop"
 echo ""
 

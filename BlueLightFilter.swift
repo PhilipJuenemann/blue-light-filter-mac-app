@@ -793,23 +793,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             self.updateScheduleMenu()
         }
 
-        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
-
-        // Load menu bar icon from same directory as executable
-        let execDir = (CommandLine.arguments[0] as NSString).deletingLastPathComponent
-        let iconName = "Gemini_Generated_Image_tb7cv5tb7cv5tb7c-Picsart-BackgroundRemover.png"
-        let iconPaths = [
-            (execDir as NSString).appendingPathComponent(iconName),
-            (FileManager.default.currentDirectoryPath as NSString).appendingPathComponent(iconName),
-        ]
-        if let path = iconPaths.first(where: { FileManager.default.fileExists(atPath: $0) }),
-           let img = NSImage(contentsOfFile: path) {
-            img.size = NSSize(width: 18, height: 18)
-            img.isTemplate = true
-            statusItem?.button?.image = img
-        } else {
-            statusItem?.button?.title = "\u{1F505}"
-        }
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem?.button?.title = "\u{1F453}"
 
         let menu = NSMenu()
 
